@@ -1,6 +1,5 @@
-// router.tsx
 import React from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import Index from "../page";
 import BlogList from "../page/listBlog";
 import CreateBlog from "../page/createBlog";
@@ -8,7 +7,7 @@ import { Home } from "../page/home";
 import BlogDetail from "../page/blogDetail";
 import MyBlog from "../page/myBlog";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <Index />,
@@ -18,22 +17,22 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/blogs",
+        path: "blogs",
         children: [
           {
             index: true,
             element: <BlogList />,
           },
           {
-            path: "/blogs/create",
+            path: "create",
             element: <CreateBlog />,
           },
           {
-            path: "/blogs/:blogId",
+            path: ":blogId",
             element: <BlogDetail />,
           },
           {
-            path: "/blogs/myBlog",
+            path: "myBlog",
             element: <MyBlog />,
           },
         ],

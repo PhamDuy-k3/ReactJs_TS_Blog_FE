@@ -6,11 +6,7 @@ import { RouterProvider } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
 import router from "./router";
 function App() {
-  return (
-    <CookiesProvider>
-      <RouterProvider router={router} />
-    </CookiesProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
