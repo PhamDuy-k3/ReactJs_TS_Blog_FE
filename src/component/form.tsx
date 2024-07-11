@@ -109,7 +109,7 @@ const BlogForm: React.FC<CheckProp> = ({ isCheck }) => {
     if (status) formData.append("status", status);
     if (views) formData.append("views", views.toString());
 
-    fetch(`http://localhost:5050/blogs/updateBlog/${blogId}`, {
+    fetch(`http://localhost:5050/blogs/${blogId}`, {
       method: "PUT",
       body: formData,
       headers: {

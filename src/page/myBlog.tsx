@@ -16,7 +16,7 @@ const MyBlog: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isApproval, setIsApproval] = useState<boolean>(true);
+  const [isApproval, setIsApproval] = useState<boolean>(false);
 
   const fetchBlogs = async () => {
     try {

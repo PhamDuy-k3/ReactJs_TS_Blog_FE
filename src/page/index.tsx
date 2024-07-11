@@ -8,7 +8,9 @@ import banner from "../img/banner.jpg";
 const Index: React.FC = () => {
   return (
     <>
-      <img style={{ height: "7rem" }} src={banner} alt="Ảnh banner" />
+      <div id="img-home">
+        <img src={banner} alt="Ảnh banner" />
+      </div>
       <ul className="menu-sub" id="sub3">
         <li>
           <NavLink to="/" end>
