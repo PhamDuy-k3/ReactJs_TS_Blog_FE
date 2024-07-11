@@ -1,4 +1,4 @@
-// CreateBlog.tsx
+// UpdateBlog.tsx
 import React, { useState } from "react";
 import axios from "axios";
 import "../style/index.scss";
@@ -7,9 +7,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BlogForm from "../component/form";
 
-const CreateBlog: React.FC = () => {
-  const [isCheck, setIscheck] = useState<boolean>(false);
+const UpdateBlog: React.FC = () => {
+  const [isCheck, setIscheck] = useState<boolean>(true);
   return <BlogForm isCheck={isCheck} />;
 };
 
-export default CreateBlog;
+export default UpdateBlog;

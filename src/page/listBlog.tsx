@@ -3,21 +3,8 @@ import React, { useEffect, useState } from "react";
 import "../style/index.scss";
 import { ElementBlog } from "../component/elementBlog";
 import BasicExample from "../component/spinner";
-
-interface Blog {
-  _id: string;
-  title: string;
-  content: string;
-  author: string;
-  tags: string[];
-  image: string;
-  category: string;
-  status: string;
-  views: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
+import { Blog } from "../interface/blog";
+import { FaBeer, FaCoffee } from "react-icons/fa";
 interface BlogApiResponse {
   data: Blog[];
   status_code: number;
@@ -29,25 +16,26 @@ const BlogList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState<string>("");
+  const [isApproval, setIsApproval] = useState<boolean>(false);
+  const [approvalStatus, setApprovalStatus] = useState<string>("approved");
+  const fetchBlogs = async () => {
+    try {
+      const response = await axios.get<BlogApiResponse>(
+        `http://localhost:5050/blogs/?title=${title}&approvalStatus=${approvalStatus}`
+      );
+      if (response.data.status_code === 200) {
+        setBlogs(response.data.data);
+      } else {
+        setError("Failed to fetch blogs");
+      }
+    } catch (error) {
+      setError("Failed to fetch blogs");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const response = await axios.get<BlogApiResponse>(
-          `http://localhost:5050/blogs/?title=${title}`
-        );
-        if (response.data.status_code === 200) {
-          setBlogs(response.data.data);
-        } else {
-          setError("Failed to fetch blogs");
-        }
-      } catch (error: any) {
-        setError("Failed to fetch blogs");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchBlogs();
   }, [title]);
 
@@ -65,7 +53,7 @@ const BlogList: React.FC = () => {
         style={{
           width: "30rem",
           marginLeft: "32%",
-          borderRadius:"15px",
+          borderRadius: "15px",
           height: "2rem",
         }}
         type="text"
@@ -73,7 +61,11 @@ const BlogList: React.FC = () => {
         onChange={handleTitleChange}
         placeholder="Tìm kiếm ..."
       />
-      <ElementBlog blogs={blogs} />
+      <ElementBlog
+        blogs={blogs}
+        isApproval={isApproval}
+        fetchBlogs={fetchBlogs} // Pass fetchBlogs function as a prop
+      />
     </div>
   );
 };

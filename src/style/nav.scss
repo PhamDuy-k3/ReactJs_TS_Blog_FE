@@ -1,5 +1,5 @@
-$nav-link-hover-bg: #f0f0f0;
-$nav-link-color: #333;
+$nav-link-hover-bg: #ed8686;
+$nav-link-color: #fffefe;
 $nav-link-padding: 10px;
 $nav-link-border-radius: 4px;
 
@@ -8,7 +8,8 @@ $nav-link-border-radius: 4px;
   padding: 0;
   margin: 0;
   display: flex; 
-
+  background-color: #ED4C5F;
+ 
   li {
     margin: 0 10px; 
 
@@ -23,6 +24,7 @@ $nav-link-border-radius: 4px;
 
       &:hover {
         background-color: $nav-link-hover-bg;
+        transform: scale(1.1);
       }
 
       p {

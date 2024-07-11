@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "../style/index.scss";
+import BasicExample from "../component/spinner";
 import { ElementBlog } from "../component/elementBlog";
-import { nameUser } from "../user/user";
 import { Blog } from "../interface/blog";
 
 
@@ -12,39 +12,57 @@ interface BlogApiResponse {
   errors: any[];
 }
 
-const MyBlog: React.FC = () => {
+const BlogApproval: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [title, setTitle] = useState<string>("");
   const [isApproval, setIsApproval] = useState<boolean>(true);
+  const [approvalStatus, setApprovalStatus] = useState<string>("pending");
 
   const fetchBlogs = async () => {
     try {
       const response = await axios.get<BlogApiResponse>(
-        `http://localhost:5050/blogs/?author=${nameUser}`
+        `http://localhost:5050/blogs/?title=${title}&approvalStatus=${approvalStatus}`
       );
       if (response.data.status_code === 200) {
         setBlogs(response.data.data);
       } else {
         setError("Failed to fetch blogs");
       }
-    } catch (error: any) {
-      console.error(error);
+    } catch (error) {
       setError("Failed to fetch blogs");
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [title]);
 
-  if (loading) return <p>Loading...</p>;
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  if (loading) return <BasicExample />;
   if (error) return <p>{error}</p>;
 
   return (
     <div className="box">
-      <h1> My Blogs</h1>
+      <h1>Blogs</h1>
+      <input
+        style={{
+          width: "30rem",
+          marginLeft: "32%",
+          borderRadius: "15px",
+          height: "2rem",
+        }}
+        type="text"
+        value={title}
+        onChange={handleTitleChange}
+        placeholder="Tìm kiếm ..."
+      />
       <ElementBlog
         blogs={blogs}
         isApproval={isApproval}
@@ -54,4 +72,4 @@ const MyBlog: React.FC = () => {
   );
 };
 
-export default MyBlog;
+export default BlogApproval;

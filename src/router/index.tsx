@@ -6,6 +6,8 @@ import CreateBlog from "../page/createBlog";
 import { Home } from "../page/home";
 import BlogDetail from "../page/blogDetail";
 import MyBlog from "../page/myBlog";
+import BlogApproval from "../page/blogApproval";
+import UpdateBlog from "../page/updateBlog";
 
 const router = createHashRouter([
   {
@@ -34,6 +36,14 @@ const router = createHashRouter([
           {
             path: "myBlog",
             element: <MyBlog />,
+          },
+          {
+            path: "blogApproval",
+            element: <BlogApproval />,
+          },
+          {
+            path: "updateBlog/:blogId",
+            element: <UpdateBlog />,
           },
         ],
       },
