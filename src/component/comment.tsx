@@ -77,6 +77,7 @@ export const Comments: React.FC<PropId> = ({ blogId }) => {
   useEffect(() => {
     fetchComments(); 
   }, [fetchComments]);
+  
 //useCallback: Ghi nhớ hàm fetchComments để nó không thay đổi qua các lần render trừ khi phụ thuộc của nó (ở đây là blogId) thay đổi.
 //useEffect: Chạy fetchComments mỗi khi hàm fetchComments thay đổi (tức là khi blogId thay đổi).
   return (

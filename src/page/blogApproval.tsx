@@ -4,13 +4,9 @@ import "../style/index.scss";
 import BasicExample from "../component/spinner";
 import { ElementBlog } from "../component/elementBlog";
 import { Blog } from "../interface/blog";
-
-
-interface BlogApiResponse {
-  data: Blog[];
-  status_code: number;
-  errors: any[];
-}
+import { IBlogShare } from "../interface/BlogShare";
+import { BlogShareApiResponse } from "../interface/BlogShareApiResponse";
+import { BlogApiResponse } from "../interface/BlogApiResponse";
 
 const BlogApproval: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -19,6 +15,7 @@ const BlogApproval: React.FC = () => {
   const [title, setTitle] = useState<string>("");
   const [isApproval, setIsApproval] = useState<boolean>(true);
   const [approvalStatus, setApprovalStatus] = useState<string>("pending");
+  const [sharedPosts, setSharedPosts] = useState<IBlogShare[]>([]);
 
   const fetchBlogs = async () => {
     try {
@@ -36,7 +33,16 @@ const BlogApproval: React.FC = () => {
       setLoading(false);
     }
   };
-
+  const fetchSharedPosts = async () => {
+    try {
+      const res = await axios.get<BlogShareApiResponse>(
+        "http://localhost:5050/shares"
+      );
+      setSharedPosts(res.data.data);
+    } catch (error) {
+      console.error("Lỗi lấy bài viết đã chia sẻ:", error);
+    }
+  };
   useEffect(() => {
     fetchBlogs();
   }, [title]);
@@ -66,7 +72,8 @@ const BlogApproval: React.FC = () => {
       <ElementBlog
         blogs={blogs}
         isApproval={isApproval}
-        fetchBlogs={fetchBlogs} // Pass fetchBlogs function as a prop
+        fetchBlogs={fetchBlogs}
+        fetchSharedPosts={fetchSharedPosts}
       />
     </div>
   );

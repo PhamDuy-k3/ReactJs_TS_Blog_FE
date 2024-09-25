@@ -3,19 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import "../style/index.scss";
 import { Comments } from "../component/comment";
-
-interface Blog {
-  title: string;
-  content: string;
-  author: string;
-  tags: string[];
-  image: string;
-  category: string;
-  status: string;
-  views: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Blog } from "../interface/blog";
 
 interface BlogApiResponse {
   data: Blog;

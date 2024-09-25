@@ -1,9 +1,8 @@
-// Index.tsx
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import "../style/index.scss";
-import { nameUser } from "../user/user";
+import { nameAdmin, nameUser } from "../user/user";
 import banner from "../img/banner.jpg";
 const Index: React.FC = () => {
   return (
@@ -45,7 +44,7 @@ const Index: React.FC = () => {
           </NavLink>
         </li>
 
-        {nameUser === "Phạm Duy" && (
+        {nameUser === nameAdmin && (
           <li>
             <NavLink to="/blogs/blogApproval">
               <p>

@@ -1,43 +1,36 @@
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaEllipsisVertical } from "react-icons/fa6";
-
-interface Blog {
-  _id: string;
-  title: string;
-  content: string;
-  author: string;
-  tags: string[];
-  image: string;
-  category: string;
-  status: string;
-  views: number;
-  createdAt: Date;
-  updatedAt: Date;
-  approvedAt: Date;
-}
+import { nameAdmin, nameUser } from "../user/user";
+import Shares from "./model";
+import { Blog } from "../interface/blog";
 
 interface ElementBlogProps {
   blogs: Blog[];
   isApproval: boolean;
-  fetchBlogs: () => void; // Receive fetchBlogs as a prop
+  fetchBlogs: () => void;
+  fetchSharedPosts: () => void;
 }
 
 export const ElementBlog: React.FC<ElementBlogProps> = ({
   blogs,
   isApproval,
   fetchBlogs, // Destructure fetchBlogs
+  fetchSharedPosts,
 }) => {
-  const [showAction, setShowAction] = useState<{ [key: string]: boolean }>({});
+  const [showActions, setShowActions] = useState<string[]>([]);
 
-  const handleApprove = async (blogId: string) => {
+  const [isCheckUpdate, setCheckUpdate] = useState<boolean>(true);
+  const [author, setAuthor] = useState<string>("");
+
+  const handleApprove = async (blogId: string): Promise<void> => {
     try {
       const approvalDate = new Date();
       await axios.put(`http://localhost:5050/blogs/${blogId}/blogApproval`, {
         approvalStatus: "approved",
         approvedAt: approvalDate,
-        approvedBy: "Phạm Duy",
+        approvedBy: nameAdmin,
       });
       fetchBlogs();
     } catch (error) {
@@ -45,15 +38,24 @@ export const ElementBlog: React.FC<ElementBlogProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (nameUser === nameAdmin) {
+      setCheckUpdate(false);
+    }
+  });
+
   const toggleAction = (id: string) => {
-    setShowAction((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    if (showActions.includes(id)) {
+      setShowActions(showActions.filter((item) => item !== id));
+    } else {
+      if (showActions.length === 1) {
+        setShowActions([id]);
+      } else {
+        setShowActions([...showActions, id]);
+      }
+    }
   };
-  console.log(showAction); //{668e0ad2afe031ca04114503: true}
-  //=> showAction[id] //true
-  // !underfine = true
+  console.log(showActions);
   const deleteBlog = async (id: string) => {
     try {
       await axios.delete(`http://localhost:5050/blogs/${id}`);
@@ -69,16 +71,27 @@ export const ElementBlog: React.FC<ElementBlogProps> = ({
         {blogs.length > 0 ? (
           blogs.map((blog: Blog) => (
             <li key={blog._id}>
-              <p id="action">
-                <FaEllipsisVertical onClick={() => toggleAction(blog._id)} />
-              </p>
-              {showAction[blog._id] && (
-                <div id="box-action">
-                  <p onClick={() => deleteBlog(blog._id)}>Xóa</p>
-                  <NavLink to={`/blogs/updateBlog/${blog._id}`}>
-                    <p>Chỉnh sửa</p>
-                  </NavLink>
-                </div>
+              {(blog.author === nameUser || nameUser === nameAdmin) && (
+                <>
+                  <p id="action">
+                    <FaEllipsisVertical
+                      onClick={() => toggleAction(blog._id)}
+                    />
+                  </p>
+                  {showActions.includes(blog._id) && (
+                    <div id="box-action">
+                      <p onClick={() => deleteBlog(blog._id)}>Xóa</p>
+                      {isCheckUpdate && (
+                        <NavLink
+                          className="nav-link"
+                          to={`/blogs/updateBlog/${blog._id}`}
+                        >
+                          <p>Chỉnh sửa</p>
+                        </NavLink>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
 
               <NavLink className="nav-link" to={`/blogs/${blog._id}`}>
@@ -103,6 +116,11 @@ export const ElementBlog: React.FC<ElementBlogProps> = ({
                   Phê duyệt
                 </button>
               )}
+              <Shares
+                fetchSharedPosts={fetchSharedPosts}
+                nameUser={nameUser}
+                postId={blog._id}
+              />
             </li>
           ))
         ) : (
